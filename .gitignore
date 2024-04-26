@@ -1,0 +1,12 @@
+
+.idea/
+
+external/glfw
+external/glm
+external/
+
+cmake-build-release-visual-studio/
+cmake-build-debug-visual-studio/
+
+
+
