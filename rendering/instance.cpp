@@ -15,7 +15,7 @@ namespace vkInit {
             supportedExtensionNames.insert(supportedExtension.extensionName);
         }
 
-        for (auto& extension : extensions) {
+        for (auto extension : extensions) {
             if(supportedExtensionNames.find(extension) == supportedExtensionNames.end()){
 
                 std::cout << "Extension: \"" << extension << "\" is not supported!" << std::endl;
