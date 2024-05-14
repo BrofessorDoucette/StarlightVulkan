@@ -2,9 +2,14 @@ cmake_minimum_required(VERSION 3.28)
 project(Starlight)
 
 set(CMAKE_CXX_STANDARD 20)
+add_compile_definitions(Starlight PRIVATE "BUILD_DEBUG=$<CONFIG:Debug>")
 
 #Create executable
 add_executable(${PROJECT_NAME} main.cpp)
+
+target_include_directories(
+	${PROJECT_NAME}
+	PUBLIC ${CMAKE_SOURCE_DIR})
 
 #Find external packages and build subdirectories for them.
 find_package(Vulkan REQUIRED)
@@ -14,30 +19,41 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/glm)
 set(CORE_SOURCES
 	${CMAKE_SOURCE_DIR}/core/engine.cpp
 	${CMAKE_SOURCE_DIR}/core/engine.hpp
-	${CMAKE_SOURCE_DIR}/core/external.hpp
+	${CMAKE_SOURCE_DIR}/core/logger.hpp
 )
 
 add_library(core ${CORE_SOURCES})
 
+target_include_directories(
+	core
+	PUBLIC ${CMAKE_SOURCE_DIR})
+
 set(RENDERING_SOURCES
-	${CMAKE_SOURCE_DIR}/rendering/instance.cpp
-	${CMAKE_SOURCE_DIR}/rendering/instance.hpp
-	${CMAKE_SOURCE_DIR}/rendering/logging.hpp
-	${CMAKE_SOURCE_DIR}/rendering/logging.cpp
-	${CMAKE_SOURCE_DIR}/rendering/device.hpp
-	${CMAKE_SOURCE_DIR}/rendering/device.cpp
+	${CMAKE_SOURCE_DIR}/rendering/renderer.cpp
+	${CMAKE_SOURCE_DIR}/rendering/renderer.hpp
+	${CMAKE_SOURCE_DIR}/rendering/window.cpp
+	${CMAKE_SOURCE_DIR}/rendering/window.hpp
+	${CMAKE_SOURCE_DIR}/rendering/context.hpp
+	${CMAKE_SOURCE_DIR}/rendering/context.cpp
 )
 
 add_library(rendering ${RENDERING_SOURCES})
 
 target_include_directories(
-	${PROJECT_NAME}
+	rendering
+	PUBLIC ${CMAKE_SOURCE_DIR}
 	PUBLIC ${VULKAN_SDK}/Include
-	PUBLIC ${CMAKE_SOURCE_DIR}/external/glfw/include
-	PUBLIC ${CMAKE_SOURCE_DIR}/external/glm/glm
-	PUBLIC ${CMAKE_SOURCE_DIR}/rendering
-	PUBLIC ${CMAKE_SOURCE_DIR}/core
 )
+
+#target_include_directories(
+#	${PROJECT_NAME}
+#	PUBLIC ${VULKAN_SDK}/Include
+#	PUBLIC ${CMAKE_SOURCE_DIR}/external/glfw/include
+#	PUBLIC ${CMAKE_SOURCE_DIR}/external/glm/glm
+#	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/core
+#	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/rendering
+#
+#)
 
 target_link_directories(
 	${PROJECT_NAME}

@@ -2,9 +2,20 @@
 
 int main() {
 
-	auto graphicsEngine = new Core::Engine();
+    try {
 
-	delete graphicsEngine;
+        auto graphicsEngine = Core::Engine();
 
-	return 0;
+        while (!graphicsEngine.should_exit_safely()) {
+
+            graphicsEngine.poll_window_events();
+
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << "\n";
+        return EXIT_FAILURE;
+    };
+
+	return EXIT_SUCCESS;
 }

@@ -1,6 +1,8 @@
 #pragma once
-#include "../core/external.hpp"
-
+#include "../rendering/renderer.hpp"
+#include <iostream>
+#include <optional>
+#include <set>
 /*
 * Vulkan separates the concept of physical and logical devices.
 *

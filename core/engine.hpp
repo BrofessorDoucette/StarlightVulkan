@@ -1,5 +1,10 @@
 #pragma once
-#include "external.hpp"
+
+#include <iostream>
+#include <stdexcept>
+
+#include "core/logger.hpp"
+#include "rendering/renderer.hpp"
 
 namespace Core {
 
@@ -11,30 +16,29 @@ namespace Core {
 
         ~Engine();
 
+        bool should_exit_safely();
+
+        void poll_window_events();
+
+        Engine(const Engine& engine) = delete;
+        Engine& operator=(const Engine& engine) = delete;
+
     private:
 
-        //Whether to print debug messages in functions
-        static constexpr bool debugEnabled = true;
+        //Member Variables
 
-        //GLFW window parameters
-        int width{1080};
-        int height{720};
-        GLFWwindow* window{nullptr};
+        //Renderer
+        RenderingAPI::Renderer m_renderer {kAppInfo, m_window};
 
-        const char* applicationName = static_cast<const char*>("Starlight (Vulkan)");
-        const uint32_t applicationVersion = 1;
-        const char* engineName = static_cast<const char*>("Starlight");
-        const uint32_t engineVersion = 1;
+        /*
+        vk::SurfaceKHR surface {nullptr};
 
-        //Vulkan Instance and Dependencies
-        vk::Instance instance {nullptr};
-        vk::DebugUtilsMessengerEXT debugMessenger {nullptr};
-        vk::DispatchLoaderDynamic dldi;
-        std::vector<const char*> enabledLayers = determineLayers(debugEnabled);
+        std::vector<const char*> enabledLayers = determineLayers(_debugEnabled);
 
         vk::PhysicalDevice physicalDevice {nullptr};
         vk::Device logicalDevice {nullptr};
         vk::Queue graphicsQueue {nullptr};
+        vk::Queue presentQueue {nullptr};
 
         static constexpr std::vector<const char*> determineLayers(bool debug) {
 
@@ -47,16 +51,8 @@ namespace Core {
             return layers;
         }
 
-        //GLFW setup
-        void build_glfw_window();
+        void create_renderer(); */
 
-        void create_vulkan_instance();
-
-        void choose_vulkan_physical_device();
-
-        void create_vulkan_logical_device();
-
-        void set_graphics_queue();
 
     };
 }

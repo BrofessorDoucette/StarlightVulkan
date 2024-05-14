@@ -1,63 +1,38 @@
 #include "engine.hpp"
-#include "../rendering/instance.hpp"
-#include "../rendering/logging.hpp"
-#include "../rendering/device.hpp"
+
 
 namespace Core {
 
-    Engine::Engine() {
+    Engine::Engine(){
 
-        if (debugEnabled) {
-            std::cout << "Constructing Graphics Engine! \n" << std::endl;
-        }
-
-        build_glfw_window();
-        create_vulkan_instance();
-        choose_vulkan_physical_device();
-        create_vulkan_logical_device();
-        set_graphics_queue();
+        Logger<LogLevel::kInfo>::instance()
+            << "Starting Starlight Graphics Engine!\n";
 
     }
 
     Engine::~Engine() {
 
-        if (debugEnabled) {
-            std::cout << "\n";
-            std::cout << "Terminating GLFW Window!\n";
-        }
-
-        logicalDevice.destroy();
-
-        if(debugEnabled) {
-            instance.destroyDebugUtilsMessengerEXT(debugMessenger, nullptr, dldi);
-        }
-        instance.destroy();
-
-        //terminate glfw
-        glfwTerminate();
+        Logger<LogLevel::kInfo>::instance()
+            << "\n"
+            << "Terminating GLFW Window!\n";
     }
 
-    void Engine::build_glfw_window() {
+    bool Engine::should_exit_safely() {
 
-        //Initialize glfw
-        glfwInit();
+        return m_window.should_close_window();
+    }
 
-        //No default rendering client, we'll hook vulkan up to the window later
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        //Resizing breaks the swapchain, we'll disable it for now
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    void Engine::poll_window_events() {
 
-        window = glfwCreateWindow(width, height, applicationName, nullptr, nullptr);
-
-        if(!window) {
-            throw std::runtime_error("Failed to create GLFW window!");
-        }
+        m_window.poll_events();
+    }
 
 
-        if (debugEnabled) {
-            std::cout << "Successfully made a GLFW window called: " << applicationName << std::endl;
-            std::cout << "Width: " << width << ", Height: " << height << "\n" << std::endl;
-        }
+    /*
+    void Engine::create_rendering_context() {
+
+        //context = RenderingAPI::Context(RenderingAPI::GraphicsAPI::Vulkan);
+
     }
 
     void Engine::create_vulkan_instance() {
@@ -71,11 +46,22 @@ namespace Core {
 
         dldi = vk::DispatchLoaderDynamic(instance, vkGetInstanceProcAddr);
 
-        if(debugEnabled) {
+        if(_debug == Debug::Enabled) {
 
             debugMessenger = vkInit::make_debug_messenger(instance, dldi);
 
         }
+
+        VkSurfaceKHR surfaceTmp;
+        if(glfwCreateWindowSurface(instance, window, nullptr, &surfaceTmp) != VK_SUCCESS){
+            if(_debug == Debug::Enabled) {
+                std::cout << "Failed to abstract the glfw surface for Vulkan. \n";
+            }
+        } else if (_debug == Debug::Enabled) {
+            std::cout << "Successfully abstracted the glfw surface for Vulkan. \n";
+        }
+
+        surface = surfaceTmp;
 
     }
 
@@ -87,9 +73,9 @@ namespace Core {
             throw std::runtime_error("No physical device was suitable to be chosen!");
         }
 
-        if(debugEnabled) {
-            std::cout << "Picked device: " << std::endl;
-            std::cout << (physicalDevice.getProperties()).deviceName << std::endl;
+        if(_debug == Debug::Enabled) {
+            std::cout << "Picked device: \n";
+            std::cout << (physicalDevice.getProperties()).deviceName;
             std::cout << "\n";
         }
 
@@ -105,7 +91,7 @@ namespace Core {
 
         graphicsQueue = vkInit::get_graphics_queue(physicalDevice, logicalDevice, debugEnabled);
 
-    }
+    }*/
 
 
 }

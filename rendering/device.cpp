@@ -136,12 +136,19 @@ namespace vkInit {
 
             if(queueFamily.queueFlags & vk::QueueFlagBits::eGraphics) {
                 indices.graphicsFamily = i;
+
+                if(debugEnabled) {
+                    std::cout << "Queue family: " << i << ", is suitable for graphics.\n";
+                }
+            }
+
+            /*if(device.getSurfaceSupportKHR(i, surface)) {
                 indices.presentFamily = i; //graphics family queues can likely present also
 
                 if(debugEnabled) {
-                    std::cout << "Queue family: " << i << ", is suitable for graphics and presenting." << std::endl;
+                    std::cout << "Queue family: " << i << "is suitable for presenting.\n";
                 }
-            }
+            }*/
 
             if(indices.isComplete()) {
                 break;
