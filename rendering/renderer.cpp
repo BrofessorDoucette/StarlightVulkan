@@ -1,17 +1,27 @@
-#include "renderer.hpp"
+#include "rendering/renderer.hpp"
 
-namespace RenderingAPI {
+namespace Rendering {
 
 
-    Renderer::Renderer(const Core::ApplicationInfo& t_app_info, Core::Window& t_window) :
-        m_app_info(t_app_info), m_context(t_app_info), m_window(t_window) {
+    Renderer::Renderer(const char* t_application_name, const char* t_engine_name) :
+        kApplicationName(t_application_name), kEngineName(t_engine_name){
 
     }
 
     Renderer::~Renderer() {
 
+        Core::Logger<Core::LogLevel::kInfo>::instance()
+            << " - Destructing Renderer Abstraction! \n";
 
 
+    }
+
+    bool Renderer::window_should_close() {
+        return m_window.should_close_window();
+    }
+
+    void Renderer::poll_window_events() {
+        m_window.poll_events();
     }
 
 }

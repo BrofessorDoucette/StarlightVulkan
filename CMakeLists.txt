@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.28)
 project(Starlight)
 
 set(CMAKE_CXX_STANDARD 20)
-add_compile_definitions(Starlight PRIVATE "BUILD_DEBUG=$<CONFIG:Debug>")
+add_compile_definitions(Starlight
+						PRIVATE "BUILD_DEBUG=$<CONFIG:Debug>")
+
+option(ENABLE_SWAP_CHAIN "ENABLES SWAP CHAIN EXTENSION" ON)
+
+add_compile_definitions(Starlight
+	PRIVATE "ENABLE_SWAP_CHAIN=$<CONFIG:ENABLE_SWAP_CHAIN>")
 
 #Create executable
 add_executable(${PROJECT_NAME} main.cpp)
@@ -35,6 +41,12 @@ set(RENDERING_SOURCES
 	${CMAKE_SOURCE_DIR}/rendering/window.hpp
 	${CMAKE_SOURCE_DIR}/rendering/context.hpp
 	${CMAKE_SOURCE_DIR}/rendering/context.cpp
+	${CMAKE_SOURCE_DIR}/rendering/device.cpp
+	${CMAKE_SOURCE_DIR}/rendering/device.hpp
+	${CMAKE_SOURCE_DIR}/rendering/surface.cpp
+	${CMAKE_SOURCE_DIR}/rendering/surface.hpp
+	${CMAKE_SOURCE_DIR}/rendering/swap_chain.cpp
+	${CMAKE_SOURCE_DIR}/rendering/swap_chain.hpp
 )
 
 add_library(rendering ${RENDERING_SOURCES})
@@ -44,16 +56,6 @@ target_include_directories(
 	PUBLIC ${CMAKE_SOURCE_DIR}
 	PUBLIC ${VULKAN_SDK}/Include
 )
-
-#target_include_directories(
-#	${PROJECT_NAME}
-#	PUBLIC ${VULKAN_SDK}/Include
-#	PUBLIC ${CMAKE_SOURCE_DIR}/external/glfw/include
-#	PUBLIC ${CMAKE_SOURCE_DIR}/external/glm/glm
-#	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/core
-#	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/rendering
-#
-#)
 
 target_link_directories(
 	${PROJECT_NAME}
@@ -74,6 +76,7 @@ target_link_libraries(
 	PRIVATE Vulkan::Vulkan
 	PRIVATE glfw
 	PRIVATE glm::glm
+	PRIVATE core
 )
 
 target_link_libraries(

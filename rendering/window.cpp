@@ -1,9 +1,12 @@
-#include "window.hpp"
 
-namespace Core {
+#include <stdexcept>
+#include "core/logger.hpp"
+#include "rendering/window.hpp"
 
-    Window::Window(const ApplicationInfo& t_app_info, int t_window_width, int t_window_height) :
-                   m_window_name(t_app_info.kApplicationName),
+namespace Rendering {
+
+    Window::Window(const char* t_window_name, int t_window_width, int t_window_height) :
+                   m_window_name(t_window_name),
                    m_window_width(t_window_width),
                    m_window_height(t_window_height){
 
@@ -13,8 +16,15 @@ namespace Core {
 
     Window::~Window() {
 
+        Core::Logger<Core::LogLevel::kInfo>::instance()
+                << " - Destructing Rendering Window Abstraction! \n";
+
+        Core::Logger<Core::LogLevel::kInfo>::instance()
+                << "\t - Destroying GLFW Window! \n";
+
         glfwDestroyWindow(m_window);
         glfwTerminate();
+
     }
 
     void Window::build_glfw_window() {
@@ -32,9 +42,9 @@ namespace Core {
             throw std::runtime_error("Failed to create GLFW window!");
         }
 
-        //Core::DEBUG_MSG("Successfully made a GLFW window called: " << m_window_name);
-        //std::cout << "Successfully made a GLFW window called: " << m_window_name << "\n";
-        //std::cout << "Width: " << m_window_width << ", Height: " << m_window_height << "\n\n";
+        Core::Logger<Core::LogLevel::kInfo>::instance()
+            << "---Successfully made a GLFW window called: " << m_window_name << "---\n"
+            << "\t" << "- Width: " << m_window_width << ", Height: " << m_window_height << "\n";
 
     }
 
@@ -49,7 +59,7 @@ namespace Core {
 
     }
 
-    std::vector<const char *> Window::get_required_extensions() {
+    std::vector<const char *> Window::get_required_extensions() const {
 
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -59,5 +69,8 @@ namespace Core {
 
     }
 
+    GLFWwindow* Window::glfw_window() const {
+        return m_window;
+    }
 
 }

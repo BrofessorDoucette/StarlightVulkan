@@ -4,13 +4,14 @@ int main() {
 
     try {
 
-        auto graphicsEngine = Core::Engine();
+        Core::Logger<Core::LogLevel::kInfo>::instance()
+                << "----------------------------\n"
+                << "---Creating Starlight Graphics Engine!---\n"
+                << "\n";
 
-        while (!graphicsEngine.should_exit_safely()) {
+        auto engine = Core::Engine();
 
-            graphicsEngine.poll_window_events();
-
-        }
+        engine.run();
 
     } catch (const std::exception& e) {
         std::cerr << e.what() << "\n";

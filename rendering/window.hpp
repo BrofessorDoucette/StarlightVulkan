@@ -1,16 +1,16 @@
 #pragma once
 
-#include <stdexcept>
-#include <iostream>
-#include "GLFW/glfw3.h"
 #include <vector>
 
-namespace Core {
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+namespace Rendering {
 
     class Window {
 
     public:
-        Window(const ApplicationInfo& t_app_info, int t_window_width, int t_window_height);
+        Window(const char* t_window_name = "Starlight", int t_window_width = 1080, int t_window_height = 720);
 
         ~Window();
 
@@ -21,8 +21,9 @@ namespace Core {
 
         void poll_events();
 
-        std::vector<const char*> get_required_extensions();
+        [[nodiscard]] std::vector<const char*> get_required_extensions() const;
 
+        GLFWwindow* glfw_window() const;
 
     private:
 
